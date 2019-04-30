@@ -3,7 +3,7 @@ Roles Table
 - id, integer, primary key, not null, auto-increment
 - name, varchar(255), unique, not null
 
-Client <> API(Adapter) <> DB (Server)
+Client <> API <> knex <> adapter <> DB (Server)
 
 [ API <> Query Builder ] <> [ Driver <> DB ]
 
