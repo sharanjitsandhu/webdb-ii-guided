@@ -2,21 +2,23 @@ const router = require("express").Router();
 const knex = require("knex");
 
 const knexConfig = {
-  client: "sqlite3",
+  client: "sqlite3", // property specifying the adapter
   useNullAsDefault: true,
   connection: {
-    filename: "./data/roles.db3"
+    // connection property can be a string or object
+    filename: "./data/roles.db3" // from the root folder
   }
   // debug: true
 };
 
 const db = knex(knexConfig);
 
+// select * from roles
 router.get("/", (req, res) => {
   // get the roles from the database
   // res.send("Write code to retrieve all roles");
 
-  // returns a promise that resolves to all records in the table
+  // returns a promise with all records in the table
   db("roles")
     .then(roles => {
       res.status(200).json(roles);
@@ -26,6 +28,7 @@ router.get("/", (req, res) => {
     });
 });
 
+// select * from roles where id = :id
 router.get("/:id", (req, res) => {
   // retrieve a role by id
   // res.send("Write code to retrieve a role by id");
@@ -35,7 +38,7 @@ router.get("/:id", (req, res) => {
   db("roles")
     // .where({ id })
     .where({ id: roleId })
-    .first() // by adding first(), it won't show array instead we should only get one object
+    .first() // by adding first() method, it won't show array instead we should only get one object
     .then(role => {
       res.status(200).json(role);
     })
@@ -44,11 +47,11 @@ router.get("/:id", (req, res) => {
     });
 });
 
+// insert into roles () values (req.body)
 router.post("/", (req, res) => {
   // add a role to the database
   // res.send("Write code to add a role");
 
-  //get back an array with the last id generated: [3]
   db("roles")
     .insert(req.body)
     .then(ids => {
@@ -74,7 +77,11 @@ router.put("/:id", (req, res) => {
     .update(req.body)
     .then(count => {
       if (count > 0) {
-        res.status(200).json(count);
+        res
+          .status(200)
+          .json({
+            message: `${count} ${count > 1 ? "records" : "record updated"}`
+          });
       } else {
         res.status(404).json({ message: "Record not found." });
       }
